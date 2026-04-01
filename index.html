@@ -1,58 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
+<!DOCTYPE html><html lang="en" class="scroll-smooth"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Play2Rewards - Play Games & Earn</title>
+    <title>VIP Players</title>
     
-    <!-- Tailwind CSS -->
+    <!-- تحسينات الأداء -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3XND2MBVW"></script> 
+    <script> 
+        window.dataLayer = window.dataLayer || []; 
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date()); 
+        gtag('config', 'G-P3XND2MBVW'); 
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: { 
+                        primary: '#8b5cf6',
+                        secondary: '#06b6d4',
+                        dark: '#050508',
+                        card: '#1e1b4b'
                     },
-                    colors: {
-                        brand: {
-                            dark: '#020617', // Slate 950
-                            card: '#0f172a', // Slate 900
-                            border: '#1e293b', // Slate 800
-                            primary: '#8b5cf6', // Violet 500
-                            accent: '#06b6d4', // Cyan 500
-                            success: '#10b981', // Emerald 500
-                        }
-                    },
-                    animation: {
-                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'progress-stripe': 'progress-stripe 1s linear infinite',
-                        'scroll': 'scroll 20s linear infinite',
+                    animation: { 
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite'
                     },
                     keyframes: {
-                        'pulse-glow': {
-                            '0%, 100%': { opacity: '1', boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)' },
-                            '50%': { opacity: '0.8', boxShadow: '0 0 20px rgba(6, 182, 212, 0.5)' },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
                         },
-                        'progress-stripe': {
-                            '0%': { backgroundPosition: '1rem 0' },
-                            '100%': { backgroundPosition: '0 0' },
-                        },
-                        'scroll': {
-                            '0%': { transform: 'translateX(0)' },
-                            '100%': { transform: 'translateX(-50%)' },
+                        'bounce-subtle': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(5px)' },
                         }
                     }
                 }
@@ -61,600 +53,749 @@
     </script>
 
     <style>
-        body {
-            background-color: #020617;
-            color: #ffffff;
-            -webkit-font-smoothing: antialiased;
+        body { background-color: #050508; color: white; overflow-x: hidden; }
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            pointer-events: none;
+        }
+        .glass-panel {
+            background: rgba(30, 27, 75, 0.4);
+            backdrop-filter: blu(16px);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            transform: translateZ(0);
+        }
+        .game-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -5px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        .option-btn {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s;
+        }
+        .option-btn.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.1));
+            border-color: #8b5cf6;
+            color: #c4b5fd;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+        .toast-notification {
+            background: rgba(20, 20, 40, 0.9);
+            backdrop-filter: blur(12px);
+            border-left: 4px solid #8b5cf6;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #4c1d95; border-radius: 10px; }
+        .terminal-text { font-family: 'Courier New', Courier, monospace; text-shadow: 0 0 5px rgba(139, 92, 246, 0.5); }
+        
+        /* حقل disabled */
+        .disabled-field {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .disabled-field input {
+            cursor: not-allowed;
         }
         
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Cookie Notice Minimal */
+        .cookie-notice-minimal {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30, 27, 75, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            max-width: 280px;
+            z-index: 9999;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.5s ease-out;
         }
-
-        .neon-text {
-            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
-
-        .progress-bar {
-            background-image: linear-gradient(
-                45deg,
-                rgba(255, 255, 255, 0.15) 25%,
-                transparent 25%,
-                transparent 50%,
-                rgba(255, 255, 255, 0.15) 50%,
-                rgba(255, 255, 255, 0.15) 75%,
-                transparent 75%,
-                transparent
-            );
-            background-size: 1rem 1rem;
+        
+        .cookie-notice-minimal.hide {
+            animation: slideOutRight 0.5s ease-out forwards;
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        
+        @keyframes slideOutRight {
+            to { transform: translateX(100%); opacity: 0; }
         }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
+        
+        .cookie-notice-minimal p {
+            font-size: 11px;
+            margin-bottom: 8px;
+            color: #c4b5fd;
+            line-height: 1.3;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+        
+        .cookie-notice-minimal button {
+            background: #8b5cf6;
+            border: none;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+        
+        .cookie-notice-minimal button:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+        }
+        
+        /* Iframe Overlay Styles */
+        .locker-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .locker-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .locker-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            background: #0f0f1a;
+            border-radius: 24px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .locker-overlay.active .locker-container {
+            transform: scale(1);
+        }
+        .locker-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .close-locker {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10001;
+            backdrop-filter: blur(5px);
+        }
+        .close-locker:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: rotate(90deg);
         }
     </style>
+
+<link rel="me" href="https://www.blogger.com/profile/17324746708775329349" />
+<meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>
+<meta name='google-adsense-platform-domain' content='blogspot.com'/>
 </head>
-<body>
-    <div id="root"></div>
+<body class="min-h-screen relative font-sans text-slate-200">
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-grid"></div>
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
 
-        // --- ICONS ---
-        const Icons = {
-            Gamepad: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
-            ),
-            Gift: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.9 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
-            ),
-            CheckCircle: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-            ),
-            Lock: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            ),
-            Unlock: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
-            ),
-            Globe: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-            ),
-            ChevronDown: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m6 9 6 6 6-6"/></svg>
-            ),
-            Smartphone: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-            ),
-            Shield: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            ),
-            Star: ({ className }) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            )
-        };
+    <!-- Container for Live Notifications (Top Positioned) -->
+    <div id="toast-container" class="fixed top-24 left-4 z-[60] flex flex-col gap-3 pointer-events-none"></div>
 
-        // --- DATA & TRANSLATIONS ---
-        const COUNTRIES = [
-            { code: 'US', name: 'United States', flag: '🇺🇸', lang: 'en' },
-            { code: 'CA', name: 'Canada', flag: '🇨🇦', lang: 'en' },
-            { code: 'AU', name: 'Australia', flag: '🇦🇺', lang: 'en' },
-            { code: 'DE', name: 'Germany', flag: '🇩🇪', lang: 'de' },
-            { code: 'KR', name: 'South Korea', flag: '🇰🇷', lang: 'kr' }
-        ];
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 glass-panel border-b-0 border-b-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="showHome()">
+                <div class="relative w-10 h-10 flex items-center justify-center bg-gradient-to-tr from-violet-500 to-fuchsia-600 rounded-xl shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tighter leading-none text-white">X<span class="text-violet-400">MOD</span></h1>
+                    <p class="text-[10px] font-bold text-slate-400 tracking-widest"></p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 px-4 py-2 bg-violet-500/5 rounded-full border border-violet-500/10 shadow-[0_0_15px_rgba(139,92,246,0.1)]">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-violet-500"></span>
+                    </span>
+                    <span class="text-sm font-black text-violet-400 font-mono tracking-wide"><span id="online-count">124,592</span> ONLINE</span>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        const TRANSLATIONS = {
-            en: {
-                heroTitle: "Play Games & Earn Gift Cards",
-                heroSubtitle: "Play Games. Earn Rewards.",
-                availableIn: "Available in",
-                steps: ['Select Region', 'Choose App', 'Play & Earn', 'Verify', 'Unlock'],
-                selectBtn: "Select & Play",
-                downloads: "Downloads",
-                features: [
-                    { t: "Download & Play", d: "Install free games from our curated list." },
-                    { t: "Quick Verification", d: "Securely verify your device eligibility." },
-                    { t: "Redeem Rewards", d: "Get gift cards instantly." }
-                ],
-                verifying: {
-                    title: "Verifying...",
-                    required: "Verification Required",
-                    final: "One final step required to unlock access.",
-                    spamMsg: "To prevent spam, please complete one quick verification task to prove you are human. Your content will unlock immediately after.",
-                    btn: "Unlock & Continue",
-                    disclaimer: "Availability depends on country and device.",
-                    status: ["Connecting to secure server...", "Verifying device compatibility...", "Checking availability...", "Reserving reward allocation...", "Finalizing verification..."]
-                },
-                footer: {
-                    rights: "All rights reserved.",
-                    links: ["Terms", "Privacy", "Contact"]
-                }
-            },
-            de: {
-                heroTitle: "Spiele & Gewinne Gutscheine",
-                heroSubtitle: "Spiele. Gewinne Belohnungen.",
-                availableIn: "Verfügbar in",
-                steps: ['Region wählen', 'App wählen', 'Spielen', 'Prüfen', 'Freischalten'],
-                selectBtn: "Auswählen & Spielen",
-                downloads: "Downloads",
-                features: [
-                    { t: "Laden & Spielen", d: "Installiere kostenlose Spiele aus unserer Liste." },
-                    { t: "Schnelle Prüfung", d: "Sichere Überprüfung der Geräteberechtigung." },
-                    { t: "Belohnungen", d: "Erhalte sofort Geschenkkarten." }
-                ],
-                verifying: {
-                    title: "Überprüfung...",
-                    required: "Überprüfung erforderlich",
-                    final: "Ein letzter Schritt zum Freischalten.",
-                    spamMsg: "Um Spam zu vermeiden, bitte eine kurze Aufgabe erledigen. Dein Inhalt wird sofort danach freigeschaltet.",
-                    btn: "Freischalten & Weiter",
-                    disclaimer: "Verfügbarkeit hängt von Land und Gerät ab.",
-                    status: ["Verbindung zum Server...", "Gerätekompatibilität prüfen...", "Verfügbarkeit prüfen...", "Belohnung reservieren...", "Abschließen..."]
-                },
-                footer: {
-                    rights: "Alle Rechte vorbehalten.",
-                    links: ["AGB", "Datenschutz", "Kontakt"]
-                }
-            },
-            kr: {
-                heroTitle: "게임 플레이 & 기프트 카드 획득",
-                heroSubtitle: "게임을 하고 보상을 받으세요.",
-                availableIn: "사용 가능 국가:",
-                steps: ['국가 선택', '앱 선택', '플레이 & 적립', '확인', '잠금 해제'],
-                selectBtn: "선택 및 플레이",
-                downloads: "다운로드",
-                features: [
-                    { t: "다운로드 & 플레이", d: "엄선된 무료 게임을 설치하세요." },
-                    { t: "빠른 확인", d: "기기 적격성을 안전하게 확인합니다." },
-                    { t: "보상 받기", d: "즉시 기프트 카드를 받으세요." }
-                ],
-                verifying: {
-                    title: "확인 중...",
-                    required: "확인 필요",
-                    final: "액세스 잠금을 해제하려면 마지막 단계가 필요합니다.",
-                    spamMsg: "스팸을 방지하려면 인간임을 증명하는 빠른 확인 작업을 완료하세요. 그 후 콘텐츠가 즉시 잠금 해제됩니다.",
-                    btn: "잠금 해제 및 계속",
-                    disclaimer: "사용 가능 여부는 국가 및 기기에 따라 다릅니다.",
-                    status: ["보안 서버에 연결 중...", "기기 호환성 확인 중...", "가용성 확인 중...", "보상 할당 예약 중...", "확인 완료 중..."]
-                },
-                footer: {
-                    rights: "All rights reserved.",
-                    links: ["이용약관", "개인정보처리방침", "문의하기"]
-                }
-            }
-        };
+    <!-- App Content -->
+    <div id="app" class="relative z-10 max-w-7xl mx-auto px-6 py-10">
 
-        const APPS = [
-            {
-                id: 'mistplay',
-                name: 'Mistplay',
-                description: 'Discover new games and earn gift cards while you play.',
-                rating: 4.8,
-                downloads: '10M+',
-                color: 'from-green-500 to-emerald-700'
-            },
-            {
-                id: 'reward-king',
-                name: 'Reward King',
-                description: 'Complete casual challenges and unlock premium rewards.',
-                rating: 4.6,
-                downloads: '5M+',
-                color: 'from-purple-500 to-indigo-700'
-            }
-        ];
-
-        // --- COMPONENTS ---
-
-        function GiftCardTicker() {
-            const cards = [
-                { name: "Amazon", color: "bg-orange-500" },
-                { name: "PayPal", color: "bg-blue-600" },
-                { name: "Google Play", color: "bg-teal-500" },
-                { name: "Apple", color: "bg-gray-800" },
-                { name: "Steam", color: "bg-indigo-900" },
-                { name: "Visa", color: "bg-blue-800" },
-                { name: "Xbox", color: "bg-green-600" },
-                { name: "PlayStation", color: "bg-blue-700" },
-                { name: "Roblox", color: "bg-red-600" },
-                { name: "Netflix", color: "bg-red-700" },
-            ];
-            
-            // Duplicate list for seamless loop
-            const items = [...cards, ...cards];
-
-            return (
-                <div className="w-full overflow-hidden bg-brand-dark/50 border-t border-white/5 backdrop-blur-sm py-6 mt-12">
-                    <div className="flex w-[200%] animate-scroll hover:pause">
-                        {items.map((card, i) => (
-                            <div key={i} className="flex-shrink-0 mx-6 flex flex-col items-center justify-center gap-2 group cursor-pointer">
-                                <div className={`w-32 h-20 rounded-lg ${card.color} shadow-lg flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300`}>
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent"></div>
-                                    <span className="font-bold text-white relative z-10">{card.name}</span>
-                                    <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-white/10 rounded-full blur-xl"></div>
-                                </div>
-                            </div>
-                        ))}
+        <!-- VIEW: HOME -->
+        <div id="view-home" class="min-h-screen pb-20">
+            <div class="text-center max-w-3xl mx-auto mb-16 animate__animated animate__fadeInDown">
+                <span class="px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400 text-[10px] font-black tracking-[0.2em] uppercase mb-4 inline-block">Official Partner</span>
+                <h2 class="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight leading-tight">
+                    FAST & <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">SECURE</span>
+                </h2>
+                <div class="relative max-w-lg mx-auto group z-20">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div class="relative glass-panel rounded-2xl p-1 flex items-center">
+                        <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" id="search-input" placeholder="Search for your game..." class="w-full bg-transparent border-none outline-none text-white px-4 py-3 font-bold placeholder-slate-500" onkeyup="filterGames()">
                     </div>
                 </div>
-            );
-        }
+            </div>
+            <div id="games-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate__animated animate__fadeInUp"></div>
+        </div>
 
-        function Modal({ isOpen, onClose, title, children }) {
-            if (!isOpen) return null;
-            return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="glass-panel w-full max-w-md rounded-2xl p-6 relative animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-white">{title}</h3>
-                            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                            </button>
-                        </div>
-                        {children}
-                    </div>
-                </div>
-            );
-        }
-
-        function CountrySelector({ selected, onSelect, t }) {
-            const [isOpen, setIsOpen] = useState(false);
-
-            return (
-                <>
-                    <button 
-                        onClick={() => setIsOpen(true)}
-                        className="flex items-center gap-2 bg-brand-border hover:bg-brand-primary/20 px-4 py-2 rounded-full border border-white/10 transition-all duration-300 group"
-                    >
-                        <span className="text-xl">{selected.flag}</span>
-                        <span className="font-medium hidden sm:inline">{selected.name}</span>
-                        <Icons.ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
-                    </button>
-
-                    <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t.steps[0]}>
-                        <div className="grid grid-cols-1 gap-3">
-                            {COUNTRIES.map(country => (
-                                <button
-                                    key={country.code}
-                                    onClick={() => {
-                                        onSelect(country);
-                                        setIsOpen(false);
-                                    }}
-                                    className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 ${
-                                        selected.code === country.code
-                                            ? 'bg-brand-primary/20 border-brand-primary text-white'
-                                            : 'bg-brand-card border-white/5 hover:border-white/20 hover:bg-white/5'
-                                    }`}
-                                >
-                                    <span className="text-2xl">{country.flag}</span>
-                                    <span className="font-semibold">{country.name}</span>
-                                    {selected.code === country.code && (
-                                        <Icons.CheckCircle className="w-5 h-5 text-brand-success ml-auto" />
-                                    )}
-                                </button>
-                            ))}
-                        </div>
-                    </Modal>
-                </>
-            );
-        }
-
-        function AppCard({ app, onSelect, t }) {
-            return (
-                <div className="glass-panel p-6 rounded-2xl flex flex-col items-center text-center relative overflow-hidden group hover:border-brand-primary/50 transition-all duration-300 transform hover:-translate-y-1">
-                    <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${app.color}`}></div>
-                    
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${app.color} flex items-center justify-center mb-4 shadow-lg group-hover:shadow-brand-primary/50 transition-all duration-500`}>
-                        <Icons.Gamepad className="w-8 h-8 text-white" />
-                    </div>
-
-                    <h3 className="text-2xl font-bold mb-2">{app.name}</h3>
-                    <p className="text-gray-400 text-sm mb-4 leading-relaxed">{app.description}</p>
-                    
-                    <div className="flex items-center gap-4 mb-6 text-xs text-gray-500 font-medium">
-                        <span className="flex items-center gap-1"><Icons.Star className="w-3 h-3 text-yellow-500" /> {app.rating}</span>
-                        <span>•</span>
-                        <span>{app.downloads} {t.downloads}</span>
-                    </div>
-
-                    <button 
-                        onClick={() => onSelect(app)}
-                        className="w-full py-3 px-6 bg-white text-brand-dark font-bold rounded-xl hover:bg-brand-primary hover:text-white transition-all duration-300 shadow-lg"
-                    >
-                        {t.selectBtn}
-                    </button>
-                </div>
-            );
-        }
-
-        function VerificationScreen({ app, country, t }) {
-            const [progress, setProgress] = useState(0);
-            const [status, setStatus] = useState(t.verifying.status[0]);
-            const [isFinished, setIsFinished] = useState(false);
-
-            useEffect(() => {
-                // Reset on mount
-                setProgress(0);
-                setIsFinished(false);
-                setStatus(t.verifying.status[0]);
-
-                let interval;
+        <!-- VIEW: GENERATOR -->
+        <div id="view-generator" class="hidden min-h-[80vh] flex items-center justify-center">
+            <div class="w-full max-w-4xl grid md:grid-cols-2 gap-8 items-start">
                 
-                // Sequence of status messages from translation
-                const sequence = [
-                    { p: 10, msg: t.verifying.status[0] },
-                    { p: 30, msg: t.verifying.status[1] },
-                    { p: 50, msg: t.verifying.status[2] },
-                    { p: 70, msg: t.verifying.status[3] },
-                    { p: 75, msg: t.verifying.status[4] }
-                ];
-
-                let currentStep = 0;
-
-                interval = setInterval(() => {
-                    setProgress(prev => {
-                        // Stop at 75%
-                        if (prev >= 75) {
-                            clearInterval(interval);
-                            setIsFinished(true);
-                            return 75;
-                        }
-                        
-                        // Update status text based on progress thresholds
-                        const nextProgress = prev + 1;
-                        if (currentStep < sequence.length && nextProgress >= sequence[currentStep].p) {
-                            setStatus(sequence[currentStep].msg);
-                            currentStep++;
-                        }
-                        
-                        return nextProgress;
-                    });
-                }, 80); // Speed of the bar
-
-                return () => clearInterval(interval);
-            }, [country.code, t]); // Re-run when language changes
-
-            const handleUnlock = () => {
-                // ============================================================
-                // CPA SCRIPT / SMARTLINK INTEGRATION
-                // ============================================================
-                // Place your CPA script logic, window.open, or content locker widget trigger here.
-                // For example:
-                console.log("CPA Locker Triggered");
-                window.location.href = "https://example.com/smartlink"; 
-                // ============================================================
-            };
-
-            return (
-                <div className="w-full max-w-2xl mx-auto text-center animate-in fade-in zoom-in-95 duration-500">
-                    <div className="mb-8">
-                         <div className={`w-20 h-20 mx-auto rounded-full bg-gradient-to-br ${app.color} p-1 mb-6 animate-pulse`}>
-                            <div className="w-full h-full rounded-full bg-brand-dark flex items-center justify-center border-4 border-transparent">
-                                <Icons.Shield className="w-8 h-8 text-white" />
-                            </div>
-                        </div>
-                        <h2 className="text-3xl font-bold mb-2">
-                            {isFinished ? t.verifying.required : t.verifying.title}
-                        </h2>
-                        <p className="text-gray-400">
-                            {isFinished ? t.verifying.final : status}
-                        </p>
+                <!-- Left Side (Desktop) -->
+                <div class="hidden md:block sticky top-24 text-center">
+                    <div class="relative w-64 h-64 mx-auto mb-8 group">
+                        <div class="absolute inset-0 bg-violet-500 blur-[60px] opacity-20 group-hover:opacity-40 transition duration-500"></div>
+                        <img id="gen-image" class="relative w-full h-full object-cover rounded-[2rem] shadow-2xl border-4 border-white/5 animate-float" src="">
                     </div>
-
-                    <div className="glass-panel p-8 rounded-3xl relative overflow-hidden mb-8">
-                        {/* Progress Bar Container */}
-                        <div className="h-6 w-full bg-brand-dark rounded-full overflow-hidden border border-white/10 relative">
-                            <div 
-                                className="h-full bg-brand-accent transition-all duration-300 ease-out relative overflow-hidden"
-                                style={{ width: `${progress}%` }}
-                            >
-                                {/* Striped Animation */}
-                                <div className="absolute inset-0 w-full h-full animate-progress-stripe progress-bar"></div>
-                                {/* Glow effect at tip */}
-                                <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]"></div>
-                            </div>
-                        </div>
-                        
-                        <div className="flex justify-between mt-3 text-sm font-mono text-brand-accent">
-                            <span>{status}</span>
-                            <span>{progress}%</span>
-                        </div>
-                    </div>
-
-                    {isFinished && (
-                        <div className="animate-in slide-in-from-bottom-4 duration-500 fade-in fill-mode-forwards">
-                            <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl mb-6 text-yellow-200 text-sm flex items-center gap-3 text-left">
-                                <Icons.Lock className="w-5 h-5 flex-shrink-0" />
-                                <p>{t.verifying.spamMsg}</p>
-                            </div>
-                            
-                            {/* CPA SCRIPT CONTAINER PLACEHOLDER IF NEEDED */}
-                            <div id="cpa-script-container" className="mb-4"></div>
-
-                            <button 
-                                onClick={handleUnlock}
-                                className="group relative w-full py-4 px-8 bg-brand-primary text-white font-bold text-xl rounded-xl overflow-hidden shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_30px_rgba(139,92,246,0.8)] transition-all duration-300"
-                            >
-                                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                                <span className="relative flex items-center justify-center gap-2">
-                                    {t.verifying.btn} <Icons.ChevronDown className="rotate-270 w-5 h-5" />
-                                </span>
-                            </button>
-                            
-                            <p className="mt-4 text-xs text-gray-500">
-                                {t.verifying.disclaimer}
-                            </p>
-                        </div>
-                    )}
+                    <h2 id="gen-title" class="text-4xl font-black text-white uppercase tracking-tight mb-2">GAME NAME</h2>
+                    <p class="text-violet-400 font-bold tracking-widest uppercase text-sm">Server Status: Online</p>
                 </div>
-            );
-        }
 
-        function StepIndicator({ currentStep, t }) {
-            const steps = t.steps;
-            const stepsData = [
-                { id: 1, title: steps[0] },
-                { id: 2, title: steps[1] },
-                { id: 3, title: steps[2] },
-                { id: 4, title: steps[3] },
-                { id: 5, title: steps[4] }
-            ];
-
-            return (
-                <div className="w-full max-w-4xl mx-auto mb-12 hidden md:block">
-                    <div className="flex justify-between relative">
-                        {/* Connecting Line */}
-                        <div className="absolute top-1/2 left-0 w-full h-1 bg-white/5 -translate-y-1/2 z-0"></div>
-                        
-                        {stepsData.map((step, idx) => {
-                            let status = 'pending'; 
-                            // Simplified logic for this demo
-                            const isCompleted = (currentStep === 'VERIFICATION' && idx < 3) || (currentStep === 'FINAL');
-                            const isActive = (currentStep === 'SELECTION' && idx <= 1) || (currentStep === 'VERIFICATION' && idx === 3) || (currentStep === 'FINAL' && idx === 4);
-
-                            return (
-                                <div key={step.id} className="relative z-10 flex flex-col items-center gap-2">
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300 ${
-                                        isCompleted ? 'bg-brand-success border-brand-success text-brand-dark' :
-                                        isActive ? 'bg-brand-primary border-brand-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]' :
-                                        'bg-brand-card border-gray-700 text-gray-500'
-                                    }`}>
-                                        {isCompleted ? <Icons.CheckCircle className="w-4 h-4" /> : step.id}
-                                    </div>
-                                    <span className={`text-xs font-medium uppercase tracking-wider ${isActive || isCompleted ? 'text-white' : 'text-gray-600'}`}>{step.title}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            )
-        }
-
-        // --- MAIN APP ---
-
-        function App() {
-            const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
-            const [selectedApp, setSelectedApp] = useState(null);
-            const [view, setView] = useState('SELECTION'); // SELECTION, VERIFICATION, FINAL
-
-            // Get current language strings
-            const t = TRANSLATIONS[selectedCountry.lang] || TRANSLATIONS['en'];
-
-            const handleAppSelect = (app) => {
-                setSelectedApp(app);
-                setView('VERIFICATION');
-            };
-
-            return (
-                <div className="min-h-screen flex flex-col bg-[url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center bg-fixed bg-no-repeat relative">
-                    {/* Dark Overlay */}
-                    <div className="absolute inset-0 bg-brand-dark/90 backdrop-blur-sm z-0"></div>
+                <!-- Right Side (Controls) -->
+                <div class="glass-panel rounded-[2rem] p-6 md:p-10 relative overflow-hidden">
+                    <button onclick="showHome()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
                     
-                    {/* Content */}
-                    <div className="relative z-10 flex flex-col min-h-screen">
-                        
-                        {/* Header */}
-                        <header className="w-full border-b border-white/5 bg-brand-dark/50 backdrop-blur-md sticky top-0 z-40">
-                            <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-accent flex items-center justify-center text-white">
-                                        <Icons.Gamepad className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <h1 className="text-xl font-bold tracking-tight">Play2Rewards</h1>
-                                        <p className="text-xs text-gray-400 hidden sm:block">{t.heroSubtitle}</p>
-                                    </div>
-                                </div>
-                                <CountrySelector selected={selectedCountry} onSelect={setSelectedCountry} t={t} />
+                    <div class="md:hidden flex items-center gap-4 mb-8">
+                        <img id="gen-image-mob" class="w-16 h-16 rounded-xl object-cover shadow-lg border border-white/10" src="">
+                        <div>
+                            <h2 id="gen-title-mob" class="text-xl font-black uppercase text-white">GAME</h2>
+                            <span class="text-[10px] bg-violet-500/20 text-violet-400 px-2 py-1 rounded font-bold">DETECTED</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1 -->
+                    <div id="step-1" class="space-y-6">
+                        <!-- Username Field - Hidden for Toca Boca and Speed Stars -->
+                        <div id="username-field" class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">USERNAME</label>
+                            <div class="relative">
+                                <input type="text" id="username-input" class="w-full bg-[#0b0b15] border border-white/10 rounded-xl px-5 py-4 text-white font-bold outline-none focus:border-violet-500/50 focus:shadow-[0_0_20px_rgba(139,92,246,0.1)] transition" placeholder="Enter Player ID...">
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_10px_#8b5cf6]"></div>
                             </div>
-                        </header>
-
-                        <main className="flex-grow flex flex-col items-center justify-center p-6 w-full max-w-7xl mx-auto">
-                            
-                            {view === 'SELECTION' && (
-                                <div className="w-full max-w-5xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                                    <div className="text-center mb-16 space-y-4">
-                                        <h2 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-brand-accent to-brand-primary drop-shadow-sm pb-2">
-                                            {t.heroTitle}
-                                        </h2>
-                                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-brand-accent text-sm font-medium">
-                                            <Icons.Globe className="w-4 h-4" />
-                                            {t.availableIn} {selectedCountry.name}
-                                        </div>
-                                    </div>
-
-                                    <StepIndicator currentStep={view} t={t} />
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto">
-                                        {APPS.map(app => (
-                                            <AppCard key={app.id} app={app} onSelect={handleAppSelect} t={t} />
-                                        ))}
-                                    </div>
-
-                                    <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-4xl mx-auto">
-                                        <div className="p-4">
-                                            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-brand-primary">
-                                                <Icons.Smartphone className="w-6 h-6" />
-                                            </div>
-                                            <h4 className="font-bold mb-1">{t.features[0].t}</h4>
-                                            <p className="text-sm text-gray-500">{t.features[0].d}</p>
-                                        </div>
-                                        <div className="p-4">
-                                            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-brand-accent">
-                                                <Icons.Shield className="w-6 h-6" />
-                                            </div>
-                                            <h4 className="font-bold mb-1">{t.features[1].t}</h4>
-                                            <p className="text-sm text-gray-500">{t.features[1].d}</p>
-                                        </div>
-                                        <div className="p-4">
-                                            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-brand-success">
-                                                <Icons.Gift className="w-6 h-6" />
-                                            </div>
-                                            <h4 className="font-bold mb-1">{t.features[2].t}</h4>
-                                            <p className="text-sm text-gray-500">{t.features[2].d}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {(view === 'VERIFICATION' || view === 'FINAL') && (
-                                <VerificationScreen app={selectedApp} country={selectedCountry} t={t} />
-                            )}
-
-                        </main>
-                        
-                        {/* Gift Card Ticker at the bottom */}
-                        <GiftCardTicker />
-
-                        <footer className="w-full py-8 border-t border-white/5 text-center text-gray-600 text-sm">
-                            <p>© 2024 Play2Rewards. {t.footer.rights}</p>
-                            <div className="flex justify-center gap-4 mt-2">
-                                {t.footer.links.map((link, i) => (
-                                    <span key={i} className="hover:text-gray-400 cursor-pointer">{link}</span>
-                                ))}
+                        </div>
+                        <!-- Platform Field - Hidden for Roblox and Blox Fruits -->
+                        <div id="platform-field" class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">PLATFORM <span class="text-red-500">*</span></label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="selectPlatform(this)" class="platform-btn option-btn p-3 rounded-xl flex justify-center items-center gap-2 text-sm font-bold">
+                                    <img src="https://i.postimg.cc/GhWnQd6h/20260115-032950.png" class="w-4 h-4" alt="Android"> Android
+                                </button>
+                                <button onclick="selectPlatform(this)" class="platform-btn option-btn p-3 rounded-xl flex justify-center items-center gap-2 text-sm font-bold">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.71-3.06 1.48-.69.7-1.24 1.85-1.07 3.14 1.15.08 2.35-.64 3.06-1.51z"></path></svg> iOS
+                                </button>
                             </div>
-                        </footer>
+                            <p id="platform-error" class="text-red-500 text-xs font-bold hidden mt-2">Please select your platform</p>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">SELECT PACKAGE</label>
+                            <div id="amount-grid" class="grid grid-cols-2 gap-3"></div>
+                        </div>
+                        <button id="injection-btn" onclick="validateAndStart()" class="group w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-black py-4 rounded-xl shadow-[0_10px_30px_-10px_rgba(139,92,246,0.4)] transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2">
+                            <span>START INJECTION</span>
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </button>
+                    </div>
 
+                    <!-- Step 2 -->
+                    <div id="step-2" class="hidden text-center py-6">
+                        <div class="relative w-20 h-20 mx-auto mb-6">
+                            <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
+                            <div class="absolute inset-0 border-4 border-violet-500 rounded-full border-t-transparent animate-spin"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <svg class="w-8 h-8 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v6a2 2 0 01-2-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            </div>
+                        </div>
+                        <div id="console-logs" class="bg-[#050911] rounded-lg p-4 h-32 overflow-hidden flex flex-col justify-end items-start font-mono text-[10px] text-violet-400 border border-white/5 shadow-inner"></div>
+                    </div>
+                    
+                    <div class="mt-8 pt-8 border-t border-white/5">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></span>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Recent Activity</span>
+                        </div>
+                        <div id="comments-list" class="space-y-4"></div>
                     </div>
                 </div>
-            );
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimal Cookie Notice -->
+    <div id="cookie-notice" class="cookie-notice-minimal hidden">
+        <p>We use cookies to enhance your experience. By continuing, you agree to our terms.</p>
+        <button onclick="acceptCookies()">Accept</button>
+    </div>
+
+    <!-- Locker Iframe Overlay -->
+    <div id="locker-overlay" class="locker-overlay" onclick="closeLocker(event)">
+        <div class="locker-container" onclick="event.stopPropagation()">
+            <div class="close-locker" onclick="closeLocker(event)">✕</div>
+            <iframe id="locker-iframe" class="locker-iframe" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة بيانات الروابط الجديدة
+        const LOCKER_LINKS = {
+            'tocaboca': 'https://checkmyapp.site/cl/i/9vvwqw',
+    'heartopia': 'https://checkmyapp.site/cl/i/9vvwqw',
+    'avatarworld': 'https://checkmyapp.site/cl/i/9vvwqw',
+    'roblox': 'https://checkmyapp.site/cl/i/9vvwqw',
+    'bloxfruits': 'https://checkmyapp.site/cl/i/9vvwqw',
+    'speedstars': 'https://checkmyapp.site/cl/i/9vvwqw',
+    'default': 'https://checkmyapp.site/cl/i/9vvwqw'
+        };
+
+        const GAMES = [
+            { slug: "tocaboca", title: "Toca Boca", resource: "Unlocked Items", img: "https://i.postimg.cc/hhWcSvnc/IMG-20251216-041557.jpg", rewards: ["All Items Unlocked"] },
+            { slug: "avatarworld", title: "Avatar World", resource: "Aw Coins", img: "https://i.ibb.co/VWH1CBqK/images-25.jpg", rewards: ["10,000 Aw Coins", "50,000 Aw Coins", "Unlimited Aw Coins"] },
+            { slug: "roblox", title: "Roblox", resource: "Robux", img: "https://m.media-amazon.com/images/I/21aoUPG3svL.png", rewards: ["10k Robux", "50k Robux", "God Mode"] },
+            // مكافآت Blox Fruits
+            { slug: "bloxfruits", title: "Blox Fruits", resource: "Beli/Fruits", img: "https://tr.rbxcdn.com/180DAY-37cc49a6bdb03b5a4394db84ff264fe5/768/432/Image/Webp/noFilter", rewards: ["10M Beli", "Dark Blade", "PERM KITSUNE", "PERM DRAGON", "PERM BUDDHA", "PERM YETI", "PERM T-REX", "PERM DOUGH", "PERM CONTROL", "PERM TIGER", "PERM LEOPARD"] },
+            // إضافة لعبة SPEED STARS
+            { slug: "speedstars", title: "SPEED STARS", resource: "BUILD", img: "https://i.ibb.co/LhdMxhGZ/unnamed.png", rewards: ["THE BUILD"] },
+            { slug: "heartopia", title: "Heartopia", resource: "Coins", img: "https://i.postimg.cc/FHQjmPPJ/unnamed.webp", rewards: ["10,000 Coins", "50,000 Coins", "Unlimited Coins"] },
+            { slug: "matchmasters", title: "Match Masters", resource: "Boosters", img: "https://play-lh.googleusercontent.com/JoRsmy2FbqJX_29akkHCFXyVSakPPOACkKCBrqEeUGAT5LDZ9qljNwan-y7pV0baZQ749L9VQN8F9E6QkcsI", rewards: ["100 Boosters", "Legendary Chest", "Infinite Spins"] },
+            { slug: "monopolygo", title: "Monopoly Go", resource: "Dice Rolls", img: "https://m.media-amazon.com/images/I/81Iaj1F8MxL.png", rewards: ["3,500 Dice", "10,000 Dice", "All Stickers"] },
+            { slug: "hayday", title: "Hay Day", resource: "Diamonds", img: "https://store.supercell.com/_next/static/media/store-card-hd.b79da206.png", rewards: ["5k Diamonds", "Max Silo", "Instant Build"] },
+            { slug: "klondike", title: "Klondike", resource: "Emeralds", img: "https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.vizorapps.klondike.jpg", rewards: ["5k Emeralds", "99k Energy", "Max Level"] },
+            { slug: "brawlstars", title: "Brawl Stars", resource: "Gems", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfZIntqrnnIdJujMhAKoSQt7FoV5AOmBjyKFy4KG00TQ&s=10", rewards: ["2000 Gems", "All Brawlers", "Brawl Pass"] },
+            { slug: "efootball24", title: "eFootball 24", resource: "Coins", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX4M6pW0Bnr6v9Dccem5UrKrZrOHB-MVQ6NZGCPuzT-uquTB8SoXK2TZYW&s=10", rewards: ["10k Coins", "Epic Player", "Instant Win"] },
+            { slug: "gossipharbor", title: "Gossip Harbor", resource: "Gems", img: "https://m.media-amazon.com/images/I/81XYXCreY2L.jpg", rewards: ["5,000 Gems", "Max Energy", "Premium Pass"] },
+            { slug: "pokemongo", title: "Pokémon GO", resource: "PokeCoins", img: "https://m.media-amazon.com/images/M/MV5BYTJkNDRhMzAtMzVmOS00ZTE2LTllNzAtOTRiN2M2ZTA4OTI0XkEyXkFqcGc@._V1_.jpg", rewards: ["14,500 Coins", "Master Ball", "Auto Catch"] },
+            { slug: "freefire", title: "Free Fire", resource: "Diamonds", img: "https://img-cdn.publive.online/fit-in/1200x675/filters:format(webp)/entrackr/media/post_attachments/wp-content/uploads/2023/08/Freefire.jpg", rewards: ["10,000 Diamonds", "Elite Pass", "Auto Headshot"] },
+            { slug: "dicedreams", title: "Dice Dreams", resource: "Rolls", img: "https://downloadr2.apkmirror.com/wp-content/uploads/2025/02/85/67c208f147570_com.superplaystudios.dicedreams.png", rewards: ["10k Rolls", "Kingdom Pass", "Max Shield"] },
+            { slug: "coinmaster", title: "Coin Master", resource: "Spins", img: "https://play-lh.googleusercontent.com/lja_bcS9SXsaK4x_q0rXuiqf3CIIwfy8QveRWfW5MEaAPOST_auDLuzWMyMUrBzi0sI", rewards: ["5k Spins", "1 Billion Coins", "Set Blast"] },
+            { slug: "empires", title: "Empires & Puzzles", resource: "Gems", img: "https://play-lh.googleusercontent.com/EtKJbqgjgspMMaJ6LhA5ixcM6KSPd8KmC4yi9tXEegJS8BGfa30Lj4Z49o1Qqau_mnI3", rewards: ["10k Gems", "Auto Summon", "Hero Pass"] },
+            { slug: "familyisland", title: "Family Island", resource: "Rubies", img: "https://yt3.googleusercontent.com/M5jHtKtI02LBpCRdfMYi1diSDgHR-YuVvB8vlgyS68vvad63I7B7ie8lz5OTLQ1375wLsRJt=s900-c-k-c0x00ffffff-no-rj", rewards: ["5k Rubies", "99k Energy", "Instant Farm"] },
+            { slug: "traveltown", title: "Travel Town", resource: "Energy", img: "https://cdn.aptoide.com/imgs/2/6/6/266d7d2078386468c6fdcc49e0ee3d5e_fgraphic.png", rewards: ["Max Energy", "10k Gems", "Instant Merge"] },
+            { slug: "carnival", title: "Carnival Tycoon", resource: "Coins", img: "https://play-lh.googleusercontent.com/EOTRrQjJWqIh10j-lqNr3uiathwzmOT0pz0-WXbb9baUkvYcXlMGNPSEo4xVwax-oZ4", rewards: ["50k Coins", "99k Spins", "Max Tycoon"] },
+            { slug: "99nights", title: "99 Nights", resource: "Souls", img: "https://tr.rbxcdn.com/180DAY-643b9b9285f3bd9b63cf392db12a4d87/768/432/Image/Webp/noFilter", rewards: ["1,000 Souls", "Revive Kit", "10,000 Diamonds", "Unlock All"] },
+            { slug: "dahood", title: "Da Hood", resource: "Cash", img: "https://tr.rbxcdn.com/180DAY-3157f3cd45c48daae450922164c8d7d2/768/432/Image/Webp/noFilter", rewards: ["10M Cash", "God Mode", "Admin Gun"] },
+            { slug: "mm2", title: "Murder Mystery 2", resource: "Items", img: "https://tr.rbxcdn.com/180DAY-43b8c5238a32aaed2cbd1a5e0826919f/500/280/Image/Jpeg/noFilter", rewards: ["Harvester Gun", "Icebreaker Set", "Godly Knife"] },
+            { slug: "brookhaven", title: "Brookhaven RP", resource: "Premium", img: "https://tr.rbxcdn.com/180DAY-a4fb7b266105fa038d92bf425d58ee53/768/432/Image/Webp/noFilter", rewards: ["Premium Pass", "Unlock Vehicles", "Admin"] },
+        ];
+
+        let selectedGame = null;
+        let selectedAmount = "";
+        let selectedPlatform = null;
+        
+        const NAMES = [
+            "John_Smith_US", "Mike_Johnson_US", "Sarah_Wilson_US", "Chris_Davis_US", "Emma_Miller_US",
+            "David_Brown_US", "Jessica_Taylor_US", "Robert_Williams_US", "Lisa_Anderson_US", "James_Thomas_US",
+            "Jennifer_Jackson_US", "Daniel_White_US", "Amanda_Harris_US", "Kevin_Martin_US", "Michelle_Lee_US",
+            "Pierre_Dubois_FR", "Marie_Laurent_FR", "Jean_Martin_FR", "Sophie_Bernard_FR", "Thomas_Petit_FR",
+            "Julie_Roux_FR", "Nicolas_Michel_FR", "Camille_Fournier_FR", "Luc_Durand_FR", "Claire_Morel_FR",
+            "Marco_Rossi_IT", "Giulia_Bianchi_IT", "Luca_Romano_IT", "Alessia_Ferrari_IT", "Francesco_Russo_IT",
+            "Elena_Gallo_IT", "Davide_Costa_IT", "Chiara_Conti_IT",
+            "Carlos_Garcia_ES", "Ana_Rodriguez_ES", "Javier_Martinez_ES", "Laura_Hernandez_ES", "Miguel_Lopez_ES",
+            "Elena_Gonzalez_ES", "Pablo_Sanchez_ES",
+            "Ryan_Tremblay_CA", "Olivia_Clark_CA", "Nathan_Roy_CA", "Sophie_Morin_CA", "Liam_Pelletier_CA",
+            "Oliver_Jones_UK", "Charlotte_Williams_UK", "Harry_Brown_UK",
+            "Juan_Dela_Cruz_PH", "Maria_Santos_PH"
+        ];
+        
+        const MESSAGES = [
+            "Got all Toca Boca items unlocked!", "Received 50k Aw Coins instantly!", "10k Robux delivered to my account!", "Perm Kitsune unlocked successfully!",
+            "Unlimited Coins in Heartopia working!", "Dark Blade acquired in Blox Fruits!", "All Items Unlocked in Toca Boca!", "Aw Coins generator is legit!",
+            "Robux received within seconds!", "Heartopia coins working perfectly!", "Toca Boca hack 100% working!", "Avatar World coins delivered!",
+            "Blox Fruits Beli received!", "Premium items unlocked!", "Generator works like a charm!", "Thank you for the resources!",
+            "Fast and secure delivery!", "My account is safe and loaded!", "Best generator I've ever used!", "Verified and working perfectly!"
+        ];
+
+        function renderGames(list) {
+            const grid = document.getElementById('games-grid');
+            grid.innerHTML = list.map((game, index) => `
+                <div class="game-card glass-panel rounded-3xl overflow-hidden cursor-pointer group relative" onclick="openGenerator('${game.slug}')" style="animation-delay: ${index * 0.05}s">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f0518] via-transparent to-transparent opacity-80 z-10"></div>
+                        <img src="${game.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" loading="lazy" onerror="this.src='https://placehold.co/600x400/1e1b4b/FFF?text=${game.title}'"/>
+                        <div class="absolute top-3 right-3 z-20 bg-black/50 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
+                             <span class="text-[10px] font-bold text-violet-400">MOD</span>
+                        </div>
+                    </div>
+                    <div class="p-6 relative z-20">
+                        <h3 class="text-lg font-black text-white mb-1 uppercase tracking-tighter truncate">${game.title}</h3>
+                        <div class="flex items-center justify-between">
+                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">${game.resource}</p>
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 transform duration-300">
+                                <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function initRouter() {
+            let query = window.location.search.substring(1); 
+            if(query.includes('&')) query = query.split('&')[0];
+            query = query.toLowerCase();
+
+            if (query) {
+                const match = GAMES.find(g => g.slug === query);
+                if (match) openGenerator(match.slug, false);
+            }
+        }
+
+        function openGenerator(slug, updateUrl = true) {
+            selectedGame = GAMES.find(g => g.slug === slug);
+            selectedPlatform = null;
+            if (updateUrl && selectedGame) window.history.pushState({slug: slug}, "", "?" + selectedGame.slug);
+            
+            document.getElementById('gen-title').innerText = selectedGame.title;
+            document.getElementById('gen-image').src = selectedGame.img;
+            document.getElementById('gen-title-mob').innerText = selectedGame.title;
+            document.getElementById('gen-image-mob').src = selectedGame.img;
+            
+            document.getElementById('step-1').classList.remove('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('username-input').value = "";
+            
+            document.querySelectorAll('.platform-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById('platform-error').classList.add('hidden');
+
+            const usernameField = document.getElementById('username-field');
+            const platformField = document.getElementById('platform-field');
+            const btnSpan = document.querySelector('#injection-btn span');
+            
+            // إظهار/إخفاء الحقول حسب اللعبة
+            if (slug === 'tocaboca' || slug === 'speedstars') {
+                usernameField.classList.add('hidden');
+            } else {
+                usernameField.classList.remove('hidden');
+            }
+            
+            if (slug === 'roblox' || slug === 'bloxfruits') {
+                platformField.classList.add('hidden');
+                // لا حاجة للتحقق من platform لهذه الألعاب
+            } else {
+                platformField.classList.remove('hidden');
+            }
+            
+            // تعديل نص الزر
+            if (slug === 'tocaboca') {
+                btnSpan.innerText = "UNLOCK NOW";
+            } else if (slug === 'speedstars') {
+                btnSpan.innerText = "GET THE BUILD";
+            } else {
+                btnSpan.innerText = "START INJECTION";
+            }
+            
+            document.getElementById('amount-grid').innerHTML = selectedGame.rewards.map((r, i) => `
+                <button onclick="selectAmount(this, '${r}')" class="option-btn p-4 rounded-xl flex items-center justify-between group ${i===0?'active':''}">
+                    <span class="text-xs font-bold uppercase">${r}</span>
+                    <div class="w-4 h-4 rounded-full border border-white/20 group-[.active]:bg-violet-500 group-[.active]:border-violet-500 flex items-center justify-center">
+                        <svg class="w-2.5 h-2.5 text-black opacity-0 group-[.active]:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                </button>
+            `).join('');
+            selectedAmount = selectedGame.rewards[0];
+
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-generator').classList.remove('hidden');
+            
+            startFakeComments();
+            startToastNotifications(); 
+            window.scrollTo(0,0);
+        }
+
+        function selectAmount(btn, val) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedAmount = val;
+        }
+
+        function selectPlatform(btn) {
+            document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedPlatform = btn.textContent.trim();
+            document.getElementById('platform-error').classList.add('hidden');
+        }
+
+        function validateAndStart() {
+            // تحقق فقط إذا كانت المنصة مطلوبة (أي حقل المنصة ظاهر)
+            const platformField = document.getElementById('platform-field');
+            if (!platformField.classList.contains('hidden') && !selectedPlatform) {
+                document.getElementById('platform-error').classList.remove('hidden');
+                document.getElementById('platform-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            // تحقق من اسم المستخدم إذا كان الحقل ظاهراً
+            const usernameField = document.getElementById('username-field');
+            if (!usernameField.classList.contains('hidden')) {
+                const username = document.getElementById('username-input').value.trim();
+                if(!username) { 
+                    document.getElementById('username-input').focus();
+                    showToastMessage("Please enter your username!", "error");
+                    return; 
+                }
+            }
+            
+            startGenerator();
+        }
+
+        async function startGenerator() {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+            
+            const logsDiv = document.getElementById('console-logs');
+            logsDiv.innerHTML = "";
+            
+            let logs = [];
+            if (selectedGame.slug === 'tocaboca') {
+                logs = [
+                    `Connecting to Toca Boca Database...`, "Handshake successful.",
+                    "Bypassing Security System...", "Access Granted.",
+                    `Unlocking ${selectedAmount}...`, "Injecting Premium Assets...",
+                    "Unlock Process: 100%...", "Finalizing Installation..."
+                ];
+            } else {
+                logs = [
+                    `Connecting to ${selectedGame.title} Server...`, "Handshake successful.",
+                    `Authenticating User...`, "User Verified.",
+                    `Injecting ${selectedAmount}...`, "Bypassing Anti-Cheat...",
+                    "Injection: 100%...", "Finalizing..."
+                ];
+            }
+            
+            for(let log of logs) {
+                logsDiv.innerHTML += `<div class="terminal-text">> ${log}</div>`;
+                logsDiv.scrollTop = logsDiv.scrollHeight;
+                await new Promise(r => setTimeout(r, 800));
+            }
+            
+            addNewComment();
+            
+            setTimeout(() => {
+                showLocker();
+            }, 5000);
+        }
+
+        function showLocker() {
+            const gameSlug = selectedGame.slug;
+            const lockerUrl = LOCKER_LINKS[gameSlug] || LOCKER_LINKS['default'];
+            
+            // تعيين الرابط للإطار
+            document.getElementById('locker-iframe').src = lockerUrl;
+            
+            // إظهار الـ overlay
+            document.getElementById('locker-overlay').classList.add('active');
+        }
+
+        function closeLocker(event) {
+            // إخفاء الـ overlay
+            document.getElementById('locker-overlay').classList.remove('active');
+            // إفراغ محتوى الإطار لإيقاف أي صوت أو نشاط في الخلفية
+            setTimeout(() => {
+                document.getElementById('locker-iframe').src = 'about:blank';
+            }, 300);
+        }
+
+        function showToastMessage(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === "error" ? "bg-red-500/20 border-red-500/50" : 
+                          type === "success" ? "bg-green-500/20 border-green-500/50" : 
+                          "bg-violet-500/20 border-violet-500/50";
+            
+            const textColor = type === "error" ? "text-red-300" : 
+                            type === "success" ? "text-green-300" : 
+                            "text-violet-300";
+            
+            toast.className = `toast-notification flex items-center gap-3 p-3 rounded-xl min-w-[250px] animate__animated animate__fadeInDown ${bgColor}`;
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-full ${type === "error" ? "bg-red-500/20" : type === "success" ? "bg-green-500/20" : "bg-violet-500/20"} flex items-center justify-center">
+                    ${type === "error" ? '<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>' : 
+                     type === "success" ? '<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : 
+                     '<svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'}
+                </div>
+                <div>
+                    <p class="${textColor} text-xs font-bold">${message}</p>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('animate__fadeInDown');
+                toast.classList.add('animate__fadeOutUp');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
+        function addNewComment() {
+            const name = NAMES[Math.floor(Math.random() * NAMES.length)];
+            const msg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+            const list = document.getElementById('comments-list');
+            
+            const div = document.createElement('div');
+            div.className = "flex items-start gap-3 animate__animated animate__fadeInUp";
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center font-bold text-xs text-slate-400 border border-white/5">${name[0]}</div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center mb-0.5"><span class="text-xs font-bold text-white">${name}</span><span class="text-[9px] text-green-500 font-mono">JUST NOW</span></div>
+                    <p class="text-[10px] text-slate-400">${msg}</p>
+                </div>`;
+            list.prepend(div);
+            if(list.children.length > 4) list.lastChild.remove();
+        }
+
+        function startFakeComments() {
+            const list = document.getElementById('comments-list');
+            list.innerHTML = "";
+            function add() {
+                const name = NAMES[Math.floor(Math.random() * NAMES.length)];
+                const msg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+                const div = document.createElement('div');
+                div.className = "flex items-start gap-3 animate__animated animate__fadeInUp";
+                div.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center font-bold text-xs text-slate-400 border border-white/5">${name[0]}</div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-0.5"><span class="text-xs font-bold text-white">${name}</span><span class="text-[9px] text-violet-500 font-mono">VERIFIED</span></div>
+                        <p class="text-[10px] text-slate-400">${msg}</p>
+                    </div>`;
+                list.prepend(div);
+                if(list.children.length > 4) list.lastChild.remove();
+            }
+            for(let i=0; i<3; i++) add();
+            if(window.comInt) clearInterval(window.comInt);
+            window.comInt = setInterval(add, 2500);
+        }
+
+        function startToastNotifications() {
+            if(window.toastInt) clearInterval(window.toastInt);
+            
+            function showToast() {
+                if(!selectedGame) return;
+                const container = document.getElementById('toast-container');
+                const name = NAMES[Math.floor(Math.random() * NAMES.length)];
+                const reward = selectedGame.rewards[Math.floor(Math.random() * selectedGame.rewards.length)];
+                
+                const toast = document.createElement('div');
+                toast.className = "toast-notification flex items-center gap-3 p-3 rounded-xl min-w-[250px] animate__animated animate__fadeInDown";
+                toast.innerHTML = `
+                    <img src="${selectedGame.img}" class="w-8 h-8 rounded-lg object-cover">
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold">${name} received:</p>
+                        <p class="text-xs font-black text-white text-shadow">${reward}</p>
+                    </div>
+                `;
+                
+                container.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.remove('animate__fadeInDown');
+                    toast.classList.add('animate__fadeOutUp');
+                    setTimeout(() => toast.remove(), 500);
+                }, 4000);
+            }
+
+            window.toastInt = setInterval(showToast, 5000);
+            setTimeout(showToast, 1000);
+        }
+
+        function showHome() {
+            window.history.pushState({}, "", window.location.pathname);
+            document.getElementById('view-home').classList.remove('hidden');
+            document.getElementById('view-generator').classList.add('hidden');
+            if(window.toastInt) clearInterval(window.toastInt);
+            document.getElementById('toast-container').innerHTML = "";
+            if(window.comInt) clearInterval(window.comInt);
+            
+            // إغلاق اللوكر إذا كان مفتوحاً
+            closeLocker();
+        }
+
+        function filterGames() {
+            const term = document.getElementById('search-input').value.toLowerCase();
+            renderGames(GAMES.filter(g => g.title.toLowerCase().includes(term)));
+        }
+
+        setInterval(() => {
+            let el = document.getElementById('online-count');
+            let current = parseInt(el.innerText.replace(/,/g, ''));
+            let newCount = current + (Math.floor(Math.random() * 300) - 150);
+            if (newCount < 100000) newCount = 100000;
+            el.innerText = newCount.toLocaleString();
+        }, 2000);
+
+        function showCookieNotice() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                setTimeout(() => {
+                    document.getElementById('cookie-notice').classList.remove('hidden');
+                }, 2000);
+            }
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            const notice = document.getElementById('cookie-notice');
+            notice.classList.add('hide');
+            setTimeout(() => {
+                notice.classList.add('hidden');
+                notice.classList.remove('hide');
+            }, 500);
+        }
+
+        renderGames(GAMES);
+        initRouter();
+        showCookieNotice();
     </script>
-</body>
-</html>
+</body></html>
